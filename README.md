@@ -1,98 +1,90 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🚀 Project: Smart Logistics Routing API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## 📝 Overview
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+This project is a RESTful API designed to solve a core computer science and logistics problem: **finding the most efficient path** between locations on a predefined network (a **Graph**). The goal is to build a robust, production-ready backend service that accepts route constraints and returns optimal routing solutions.
 
-## Description
+This project was specifically designed to target **TypeScript** and modern backend frameworks (e.g., NestJS, Fastify, Hono).
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## ✨ Key Technical Objectives
 
-## Project setup
+Successful completion of this project requires demonstrating proficiency in the following backend domains:
 
-```bash
-$ npm install
-```
+1.  **RESTful API Design:** Implement the requested endpoints.
+2.  **Algorithm Implementation:** Implementing a complex graph traversal algorithm.
+3.  **Type Safety & Structure:** Utilizing TypeScript to enforce strict contracts across the entire application.
+4.  **API Documentation:** Generating industry-standard documentation (OpenAPI/Swagger) directly from the codebase.
 
-## Compile and run the project
+## ⚙️ Technology Stack
 
-```bash
-# development
-$ npm run start
+| Component | Technology | Reasoning |
+| :--- | :--- | :--- |
+| **Language** | **TypeScript** | Required for type safety and advanced structure. |
+| **Database** | **In Memory** or **PostgreSQL** or **MongoDB** | To persist the network data (Nodes, Edges, Weights). If in memory just store the last 5 networks |
+| **Testing** | **Jest** | Required for comprehensive unit testing of the core algorithm logic. |
+| **Documentation** | Auto-generation of OpenAPI Specification from code. |
 
-# watch mode
-$ npm run start:dev
+## 📐 Project Endpoints
 
-# production mode
-$ npm run start:prod
-```
+The API will expose two main sets of functionality: **Network Management** (CRUD for the Graph) and **Route Calculation** (the core algorithm).
 
-## Run tests
+### 1. Network Management Endpoints
 
-```bash
-# unit tests
-$ npm run test
+| HTTP Method | Endpoint | Description | Body Example |
+| :--- | :--- | :--- | :--- |
+| **POST** | `/network/upload` | Uploads a new graph definition (Nodes and Edges) and return the ID of the graph. | `{"edges":[{"from":"A","to":"B","cost":10},{"from":"A","to":"C","cost":5},{"from":"B","to":"D","cost":8},{"from":"C","to":"D","cost":12},{"from":"D","to":"E","cost":12},{"from":"D","to":"F","cost":4},{"from":"F","to":"G","cost":4},{"from":"E","to":"G","cost":9},{"from":"C","to":"H","cost":8},{"from":"D","to":"H","cost":4},{"from":"F","to":"H","cost":1}]}` |
+| **GET** | `/network/nodes/{id}` | Retrieves all defined nodes/locations from. | *None* |
 
-# e2e tests
-$ npm run test:e2e
+### 2. Route Optimization Endpoint
 
-# test coverage
-$ npm run test:cov
-```
+| HTTP Method | Endpoint | Description | Core Requirement | Body Example | Suggested Response |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **POST** | `/route/optimize/{id}` | Calculates the optimal path between two points returning the cost and the route that should be taken (e.g A -> C -> D -> E). | **Must implement the algorithm.** | `{"originNodeId": "A","destinationNodeId":"E"}` | `{"graphId":"uuid-123","totalCost":25.5,"path":["A","C","D","E"],"durationMs":4}` |
+| **GET** | `/docs` | Serves the generated **Swagger UI**. | **Must be auto-generated.** | *None* | *None* |
 
-## Deployment
+## 🧠 The Core Algorithm Challenge
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+The primary challenge lies in implementing the logic for the `/route/optimize` endpoint.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Algorithm Requirement
+The backend service must implement **Dijkstra's Algorithm** or **A\* Search** to find the shortest path between the `originNodeId` and the `destinationNodeId`.
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
 
-## Resources
+### Image of Dijkstra Algorithm Graph
+![alt text](docs/resources/dijkstras-image.jpeg)
 
-Check out a few resources that may come in handy when working with NestJS:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### Complex Scenarios
+The algorithm must be able to handle request bodies that include dynamic constraints:
 
-## Support
+1.  **Preference Switching:** The endpoint must accept a `preference` (e.g., `"shortest"`, `"fastest"`) and change the weight used in the calculation accordingly (e.g., using distance cost vs. time cost).
+2.  **Constraint Filtering:** If the request specifies `constraints: { "avoidHighways": true }`, the algorithm must **temporarily ignore** or assign infinite cost to any edge tagged as a "highway," forcing a compliant, potentially longer route.
+3.  **Error Handling:** Gracefully handle cases where the destination is unreachable or the input nodes are invalid (return `404 Not Found` or `400 Bad Request`).
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+That's a very common and professional way to handle a take-home project! It sets a clear, modern workflow expectation.
 
-## Stay in touch
+Here is the updated section to insert into the **Submission Checklist** of the `README.md` for the **Smart Logistics Routing API** (Project C).
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+---
 
-## License
+## ✅ Submission Checklist & Workflow
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+A successful submission should include:
+
+* [ ] Complete source code for the REST API.
+* [ ] A working implementation of **Dijkstra's Algorithm** within a service layer.
+* [ ] Clear **TypeScript Interfaces** for `Node`, `Edge`, and the various Request DTOs.
+* [ ] Unit tests using **Jest** for the core routing algorithm (i.e., testing the function that calculates the path directly).
+* [ ] Proof that the Swagger documentation is accessible and accurately reflects all endpoints and data schemas.
+
+### 💻 Submission Workflow
+
+The expected delivery method for this project is as follows:
+
+1.  **Fork this Repository:** Create a private fork of the original project repository (or create a new private repository if the project was provided as a zip/template).
+2.  **Develop:** Complete all required features and tests within your private repository.
+3.  **Invite:** Once development is complete, **invite the hiring manager/recruiter** (or specific email address, e.g., `[Insert Reviewer Email Here]`) as a **Collaborator** to your private repository.
+4.  **Notification:** Notify the reviewer that the code is ready and providing the link to the repository or perform an invitation to your repository.
+
+***Please DO NOT submit the code as a zip file or a Pull Request (PR) to the original repository.*** This process allows us to review your commit history and development workflow directly.
