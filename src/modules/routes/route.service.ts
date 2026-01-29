@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { DijkstraService } from '../../core/algorithms/dijkstra.service';
 import { NetworkService } from '../network/network.service';
 import { OptimizeRouteDto } from './dto/optimize-request.dto';
@@ -25,19 +29,30 @@ export class RouteService {
       cost: Number(edge.cost),
     }));
 
-    const result = this.dijkstraService.findShortestPath(
-      edges,
-      optimizeDto.originNodeId,
-      optimizeDto.destinationNodeId,
-    );
+    try {
+      const result = this.dijkstraService.findShortestPath(
+        edges,
+        optimizeDto.originNodeId,
+        optimizeDto.destinationNodeId,
+      );
 
-    const durationMs = Date.now() - startTime;
+      const durationMs = Date.now() - startTime;
 
-    return {
-      graphId: networkId,
-      totalCost: result.totalCost,
-      path: result.path,
-      durationMs,
-    };
+      return {
+        graphId: networkId,
+        totalCost: result.totalCost,
+        path: result.path,
+        durationMs,
+      };
+    } catch (error) {
+      if (error.message.includes('does not exist')) {
+        throw new NotFoundException(error.message);
+      }
+      if (error.message.includes('No path exists')) {
+        throw new BadRequestException(error.message);
+      }
+
+      throw error;
+    }
   }
 }
